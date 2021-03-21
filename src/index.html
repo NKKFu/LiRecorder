@@ -19,9 +19,13 @@
     <button id="stopBtn" class="button is-warning">Stop</button>
 
     <hr />
-
-    <button id="videoSelectBtn" class="button is-text">
-      Choose a Video Source
-    </button>
+    
+    <select id="audio-devices" onchange="selectDevice()">
+      <option selected value="">Entrada de som</option>
+    </select>
+    
+    <select id="video-devices" onchange="selectDevice()">
+      <option selected value="">Entrada de vídeo</option>
+    </select>
   </body>
 </html>

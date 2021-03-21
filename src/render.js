@@ -4,10 +4,42 @@ const { writeFile } = require('fs');
 
 const { dialog, Menu } = remote;
 
-let audioDevices = [];
-navigator.mediaDevices.enumerateDevices().then((input_devices) => {
-  audioDevices = input_devices;
-});
+const audioDevices = document.getElementById('audio-devices');
+const videoDevices = document.getElementById('video-devices');
+
+let videoDevicesAvaliableOnUser = [];
+
+function selectDevice() {
+  const videoDeviceSelected = videoDevicesAvaliableOnUser[videoDevices.value];
+  if (videoDeviceSelected)
+    selectSource(videoDeviceSelected)
+}
+
+const getAvaliableDevices = async () => {
+  const inputDevices = await navigator.mediaDevices.enumerateDevices();
+  audioDevices.innerHTML = inputDevices.filter(device => device.kind === 'audioinput').map(device => 
+    `<option value="${device.deviceId}">${device.label}</option>`
+  );
+
+  const inputSources = await desktopCapturer.getSources({
+    types: ['window', 'screen']
+  });
+
+  videoDevicesAvaliableOnUser = inputSources;
+
+  function truncate(source, size) {
+    return source.length > size ? source.slice(0, size - 1) + "…" : source;
+  }
+  
+  videoDevices.innerHTML = inputSources.map((source, index) => 
+    `<option value="${index}">${truncate(source.name, 45)}</option>`
+  );
+
+  if (inputSources.length > 0) {
+    selectDevice();
+  }
+};
+getAvaliableDevices();
 
 // Global state
 let mediaRecorder; // MediaRecorder instance to capture footage
@@ -18,6 +50,8 @@ const videoElement = document.querySelector('video');
 
 const startBtn = document.getElementById('startBtn');
 startBtn.onclick = e => {
+  audioDevices.toggleAttribute('read-only');
+  videoDevices.toggleAttribute('read-only');
   mediaRecorder.start();
   startBtn.classList.add('is-danger');
   startBtn.innerText = 'Recording';
@@ -26,40 +60,16 @@ startBtn.onclick = e => {
 const stopBtn = document.getElementById('stopBtn');
 
 stopBtn.onclick = e => {
+  audioDevices.toggleAttribute('read-only');
+  videoDevices.toggleAttribute('read-only');
   mediaRecorder.stop();
   startBtn.classList.remove('is-danger');
   startBtn.innerText = 'Start';
 };
 
-const videoSelectBtn = document.getElementById('videoSelectBtn');
-videoSelectBtn.onclick = getVideoSources;
-
-// Get the available video sources
-async function getVideoSources() {
-  const inputSources = await desktopCapturer.getSources({
-    types: ['window', 'screen']
-  });
-
-  const videoOptionsMenu = Menu.buildFromTemplate(
-    inputSources.map(source => {
-      return {
-        label: source.name, 
-        click: () => selectSource(source)
-      };
-    })
-  );
-
-  videoOptionsMenu.popup();
-}
-
 let rec = undefined;
 // Change the videoSource window to record
 async function selectSource(source) {
-  // let combined = new MediaStream([...videoStream.getTracks(), ...audioStream.getTracks()]);
-  // let recorder = new MediaRecorder(combined);
-
-  videoSelectBtn.innerText = source.name;
-
   // const constraints = { audio: true, video: { facingMode: { exact: "environment" } } }
   // const constraints = { video: { facingMode: (front? "user" : "environment") } };
 
@@ -75,12 +85,14 @@ async function selectSource(source) {
       mandatory: {
         chromeMediaSource: 'desktop',
         chromeMediaSourceId: source.id,
-        maxFrameRate: 15
+        maxFrameRate: 24
       }
     }
   });
     
-  const audio_stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+  const audio_stream = await navigator.mediaDevices.getUserMedia({ audio: {
+    deviceId: audioDevices.value
+  }})
 
   // Preview the source in a video element
   videoElement.srcObject = stream;
@@ -105,7 +117,6 @@ async function selectSource(source) {
 
 // Captures all recorded chunks
 function handleDataAvailable(e) {
-  console.log('video data available');
   if (e.data.size > 0)
     recordedChunks.push(e.data);
 }
@@ -120,11 +131,11 @@ async function handleStop(e) {
 
   const { filePath } = await dialog.showSaveDialog({
     buttonLabel: 'Salvar vídeo',
-    defaultPath: `vid-${Date.now()}.webm`
+    defaultPath: `video-${Date.now()}.webm`
   });
 
   if (filePath) {
     recordedChunks.length = 0;
-    writeFile(filePath, buffer, () => console.log('video saved successfully!'));
+    writeFile(filePath, buffer, () => alert('Salvo com sucesso!'));
   }
 }
