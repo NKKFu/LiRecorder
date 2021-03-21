@@ -8,7 +8,6 @@ const audioDevices = document.getElementById('audio-devices');
 const videoDevices = document.getElementById('video-devices');
 
 let videoDevicesAvaliableOnUser = [];
-
 function selectDevice() {
   const videoDeviceSelected = videoDevicesAvaliableOnUser[videoDevices.value];
   if (videoDeviceSelected)
@@ -48,6 +47,8 @@ const recordedChunks = [];
 // Buttons
 const videoElement = document.querySelector('video');
 
+const ticker = require('./timer')
+
 const startBtn = document.getElementById('startBtn');
 startBtn.onclick = e => {
   audioDevices.toggleAttribute('read-only');
@@ -56,8 +57,24 @@ startBtn.onclick = e => {
   stopBtn.classList.remove('disabled');
   startBtn.classList.add('disabled');
   startBtn.innerText = 'Recording';
+  recordInitialTimer = Date.now();
 };
 
+let recordInitialTimer = undefined;
+const timer = document.getElementById('timer');
+setInterval(() => {
+  if (!recordInitialTimer)
+    return;
+
+  const differenceBetweenDates = new Date(new Date() - recordInitialTimer);
+
+  const miliseconds = differenceBetweenDates.getMilliseconds();
+  const seconds = differenceBetweenDates.getSeconds();
+  const minutes = differenceBetweenDates.getMinutes();
+  const hours = differenceBetweenDates.getHours() - 20;
+
+  timer.innerHTML = `${hours}h ${minutes}m ${seconds}s ${miliseconds}ms`;
+}, 10);
 const stopBtn = document.getElementById('stopBtn');
 
 stopBtn.onclick = e => {
