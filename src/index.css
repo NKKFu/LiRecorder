@@ -1,16 +1,58 @@
 body {
+  display: flex;
+  flex-direction: column;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   padding: 0;
   margin: 0;
+  text-align: center;
+  padding-top: 20px;
 }
 
-
 video {
+  margin: 20px auto;
+  max-width: 500px;
   width: 100%;
   height: auto;
 }
 
-body {
-  text-align: center;
-  padding-top: 20px;
+#startBtn {
+  background-color: #91f048;
+  color: green;
+}
+
+#stopBtn { 
+  background-color: #db1237;
+  color: #ff879d;
+}
+
+.action-buttons button { 
+  border-radius: 5px;
+  padding: 10px 40px;
+  width: fit-content;
+  outline: 0;
+  border: 0;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.action-buttons .disabled { 
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.action-buttons button:active{ 
+  opacity: 0.5;
+}
+
+.device-options p { 
+  margin-top: 20px;
+}
+
+.device-options select { 
+  display: flex;
+  margin: 5px auto;
+  flex-direction: column;
+  max-width: 500px;
+  width: 100%;
+  padding: 5px 5px;
 }

@@ -2,30 +2,31 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Hello World!</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"
-    />
+    <title>LiRecord</title>
     <link rel="stylesheet" href="index.css" />
     <script defer src="render.js"></script>
   </head>
   <body class="content">
-    <h1>⚡ Electron Screen Recorder</h1>
+    <h1>⚡ LiRecord ⚡</h1>
 
     <video muted></video>
 
-    <button id="startBtn" class="button is-primary">Start</button>
-    <button id="stopBtn" class="button is-warning">Stop</button>
+    <div class="action-buttons">
+      <button id="startBtn">Start</button>
+      <button id="stopBtn" class="disabled">Stop</button>
+    </div>
 
     <hr />
     
-    <select id="audio-devices" onchange="selectDevice()">
-      <option selected value="">Entrada de som</option>
-    </select>
-    
-    <select id="video-devices" onchange="selectDevice()">
-      <option selected value="">Entrada de vídeo</option>
-    </select>
+    <div class="device-options">
+      <p>Entrada de áudio</p>
+      <select id="audio-devices" onchange="selectDevice()">
+        <option selected value="">Nenhum dispositivo selecionado</option>
+      </select>
+      <p>Entrada de vídeo</p>
+      <select id="video-devices" onchange="selectDevice()">
+        <option selected value="">Nenhum dispositivo selecionado</option>
+      </select>
+    </div>
   </body>
 </html>

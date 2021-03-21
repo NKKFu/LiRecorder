@@ -53,7 +53,8 @@ startBtn.onclick = e => {
   audioDevices.toggleAttribute('read-only');
   videoDevices.toggleAttribute('read-only');
   mediaRecorder.start();
-  startBtn.classList.add('is-danger');
+  stopBtn.classList.remove('disabled');
+  startBtn.classList.add('disabled');
   startBtn.innerText = 'Recording';
 };
 
@@ -63,7 +64,8 @@ stopBtn.onclick = e => {
   audioDevices.toggleAttribute('read-only');
   videoDevices.toggleAttribute('read-only');
   mediaRecorder.stop();
-  startBtn.classList.remove('is-danger');
+  stopBtn.classList.add('disabled');
+  startBtn.classList.remove('disabled');
   startBtn.innerText = 'Start';
 };
 
