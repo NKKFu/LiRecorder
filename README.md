@@ -1,5 +1,17 @@
-# Electron Screen Recorder
+# LiRecorder ⚡
 
-Build a screen recorder with Electron from scratch. 
+An app created with Electron to help people record their own computer screen without heavy programs and in a simple way.
 
-Watch the [Electron 8 Tutorial](https://youtu.be/3yqDxhR2XxE) on YouTube. 
+## ⚒ How to use?
+
+It still under development 😕
+
+## 📃 License
+
+This project is under MIT License. Check [LICENSE](LICENSE) file for more details.
+
+---
+
+<h4 align="center">
+    Developed by <b>Nelson Kenmochi</b>
+</h4>
